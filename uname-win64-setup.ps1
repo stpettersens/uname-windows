@@ -67,9 +67,13 @@ function Main {
     }
     Invoke-WebRequest $archive_url -OutFile $archive
     SHA256-Cksum $archive
-    $install_dir = "C:\Dev\bin"
+    $install_dir = "C:\Dev\uname"
     New-Item -ItemType Directory -Force -Path $install_dir
     Expand-Archive -Force -Path $archive -DestinationPath $install_dir
+
+    # Add program(s) to system PATH variable.
+    [System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";${install_dir}", [System.EnvironmentVariableTarget]::Machine)
+
     rm -fo $archive
     echo "Done."
     Write-Host -NoNewLine 'Press any key to continue...'
